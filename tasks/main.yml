@@ -1,22 +1,23 @@
 ---
   # Security Enhanced Linux configuration
 
-- name: Enable selinux
-  selinux:
-    policy: targeted
-    state: enforcing
-  when: sel_disable == false
+- name: Enable SELinux
+  block:
+    - name: Enable selinux
+      selinux:
+        policy: targeted
+        state: enforcing
 
-- name: install selinux-policy-targeted
-  yum:
-    name: selinux-policy-targeted
-    state: present
-  when: sel_disable == false
+    - name: install selinux-policy-targeted
+      yum:
+        name: selinux-policy-targeted
+        state: latest
 
-- name: install SEManage
-  yum:
-    name: policycoreutils-python
-    state: present
+    - name: install SEManage
+      yum:
+        name: policycoreutils-python
+        state: latest
+
   when: sel_disable == false
 
 - name: Disable SELinux
