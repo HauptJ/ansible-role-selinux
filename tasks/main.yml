@@ -1,6 +1,14 @@
 ---
   # Security Enhanced Linux configuration
 
+- name: Install required dependencies
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - libselinux-python
+    - libsemanage-python
+
 - name: Enable SELinux
   block:
     - name: Enable selinux
