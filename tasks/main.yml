@@ -26,11 +26,13 @@
         name: policycoreutils-python
         state: latest
 
-  when: sel_disable == false
+  when: sel_disable == false and sel_ci_test == false
 
 - name: Disable SELinux
   selinux:
     state: disabled
-  when: sel_disable == true
+  when: sel_disable == true and sel_ci_test == false
 
-- include_tasks: restart.yml
+- name: restart the server
+  include_tasks: restart.yml
+  when: sel_ci_test == false

@@ -1,3 +1,9 @@
 # Default role variable settings
 
+# Security Enhanced Linux Disable or Enable
+# true == disabled
+# false == enabled
 sel_disable: true
+
+# CI test, this should only be set to true for CI testing
+sel_ci_test: true
