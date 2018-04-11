@@ -34,5 +34,5 @@
   when: sel_disable == true and sel_ci_test == false
 
 - name: restart the server
-  include_tasks: restart.yml
+  import_tasks: restart.yml
   when: sel_ci_test == false
