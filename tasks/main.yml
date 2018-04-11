@@ -1,6 +1,14 @@
 ---
   # Security Enhanced Linux configuration
 
+- name: Install required dependencies
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - libselinux-python
+    - libsemanage-python
+
 - name: Enable SELinux
   block:
     - name: Enable selinux
@@ -18,11 +26,13 @@
         name: policycoreutils-python
         state: latest
 
-  when: sel_disable == false
+  when: sel_disable == false and sel_ci_test == false
 
 - name: Disable SELinux
   selinux:
     state: disabled
-  when: sel_disable == true
+  when: sel_disable == true and sel_ci_test == false
 
-- include_tasks: restart.yml
+- name: restart the server
+  import_tasks: restart.yml
+  when: sel_ci_test == false
