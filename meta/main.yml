@@ -18,6 +18,7 @@ galaxy_info:
     - 7
   galaxy_tags:
     - selinux
+    - security
 dependencies:
-  - { role: geerlingguy.repo-epel }
-  - { role: geerlingguy.repo-remi }
+  - role: geerlingguy.repo-epel
+  - role: geerlingguy.repo-remi
