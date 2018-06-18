@@ -26,7 +26,7 @@
         name: policycoreutils-python
         state: latest
 
-  when: sel_disable == false and sel_ci_test == false
+  when: sel_disable == false and sel_ci_test == false and ansible_host != "localhost"
 
 - name: Disable SELinux
   selinux:
@@ -35,4 +35,4 @@
 
 - name: restart the server
   import_tasks: restart.yml
-  when: sel_ci_test == false
+  when: sel_ci_test == false and ansible_host != "localhost"
