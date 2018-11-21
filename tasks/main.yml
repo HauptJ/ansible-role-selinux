@@ -3,11 +3,10 @@
 
 - name: Install required dependencies
   yum:
-    name: "{{ item }}"
+    name:
+      - libselinux-python
+      - libsemanage-python
     state: latest
-  with_items:
-    - libselinux-python
-    - libsemanage-python
 
 - name: Enable SELinux
   block:
@@ -26,7 +25,6 @@
         name: policycoreutils-python
         state: latest
 
-  #when: sel_disable == false and sel_ci_test == false and ansible_host != "localhost"
   tags:
     - deploy
     - selinux
@@ -34,13 +32,11 @@
 - name: Disable SELinux
   selinux:
     state: disabled
-  #when: sel_disable == true and sel_ci_test == false
   tags:
     - deploy
 
 - name: restart the server
   import_tasks: restart.yml
-  #when: sel_ci_test == false and ansible_host != "localhost"
   tags:
     - restart
     - deploy
