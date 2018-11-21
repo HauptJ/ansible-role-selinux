@@ -3,11 +3,10 @@
 
 - name: Install required dependencies
   yum:
-    name: "{{ item }}"
+    name:
+      - libselinux-python
+      - libsemanage-python
     state: latest
-  with_items:
-    - libselinux-python
-    - libsemanage-python
 
 - name: Enable SELinux
   block:
