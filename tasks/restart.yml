@@ -2,15 +2,27 @@
 # tasks to restart the server
 
 - name: Restart server
-  command: /sbin/shutdown -r +1
-  async: 0
+  shell: "(sleep 1 && shutdown -r now) &"
+  async: 1
   poll: 0
   ignore_errors: true
 
-- name: Waiting 150 seconds
-  pause:
-    seconds: 150
+- name: Wait for TCP connection to become available
+  local_action: 
+    module: wait_for 
+    host: "{{ ansible_ssh_host | default(ansible_host) }}" 
+    port: "{{ ansible_ssh_port | default(ansible_port) }}" 
+    timeout: 150 delay=25 
+    state: started
+  become: no
 
-- name: Wait for {{ inventory_hostname }} to finish rebooting
-  local_action: wait_for host="{{ inventory_hostname }}" state=started port=22 timeout=300
+- name: Wait for SSH to become available
+  local_action: 
+    module: wait_for 
+    host: "{{ ansible_ssh_host | default(ansible_host) }}" 
+    port: "{{ ansible_ssh_port | default(ansible_port) }}" 
+    timeout: 150 
+    delay: 5 
+    search_regex: "OpenSSH" 
+    state: present
   become: no

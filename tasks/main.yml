@@ -1,46 +1,42 @@
 ---
   # Security Enhanced Linux configuration
 
-- name: Install required dependencies
+- name: Install required dependencies - CentOS
   yum:
-    name: "{{ item }}"
+    name:
+      - libselinux-python
+      - libsemanage-python
+      - selinux-policy-targeted
+      - policycoreutils-python
     state: latest
-  with_items:
-    - libselinux-python
-    - libsemanage-python
+  when: ansible_distribution == 'CentOS'
 
-- name: Enable SELinux
-  block:
-    - name: Enable selinux
-      selinux:
-        policy: targeted
-        state: enforcing
+- name: Install required dependencies - Fedora
+  dnf:
+    name:
+      - libselinux-python
+      - libsemanage-python
+      - selinux-policy-targeted
+      - policycoreutils-python
+    state: latest
+  when: ansible_distribution == 'Fedora'
 
-    - name: install selinux-policy-targeted
-      yum:
-        name: selinux-policy-targeted
-        state: latest
-
-    - name: install SEManage
-      yum:
-        name: policycoreutils-python
-        state: latest
-
-  #when: sel_disable == false and sel_ci_test == false and ansible_host != "localhost"
+- name: Enable selinux
+  selinux:
+    policy: targeted
+    state: enforcing
   tags:
-    - deploy
-    - selinux
+    - selinux-enable
 
 - name: Disable SELinux
   selinux:
     state: disabled
-  #when: sel_disable == true and sel_ci_test == false
   tags:
+    - selinux-disable
     - deploy
 
 - name: restart the server
   import_tasks: restart.yml
-  #when: sel_ci_test == false and ansible_host != "localhost"
   tags:
     - restart
     - deploy
